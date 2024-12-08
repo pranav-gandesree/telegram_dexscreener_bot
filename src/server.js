@@ -4,10 +4,10 @@ import "dotenv/config";
 const bot = new Telegraf(process.env.TELEGRAM_BOT_API);
 
 bot.start(async (ctx) => {
-  const query = `gmgn bot 
-    - Get coin data by using the command /coin 
-    Example: /coin CA (CA = coin address)
-  `;
+  const query = `Crypto Details Bot 
+    - Get any crypto coin data by using the command /coin 
+    Example: /coin CzLSujWBLFsSjncfkh59rUFqvafWcY5tzedWJSuypump (coin address)`;
+
   ctx.reply(query);
 });
 
@@ -44,7 +44,7 @@ bot.command("coin", async (ctx) => {
         liquidity: { usd: liquidityUsd },
         fdv,
         marketCap,
-        txns: { h24: txns24h, h6: txns6h, h1: txns },
+        // txns: { h24: txns24h, h6: txns6h, h1: txns },
         volume: { h24: volume24h, h1: volume1h, h6: volume6h, m5: volume5m },
         txns: {
           h24: { buys: buys24h, sells: sells24h },
@@ -60,49 +60,44 @@ bot.command("coin", async (ctx) => {
         return num.toFixed(2);
       };
 
+      //       const message = `
+      // - **Name**: ${name}
+      // - **Symbol**: ${symbol}
+      // - **Price (USD)**: $${priceUsd}
+      // - **Price (Native)**: ${priceNative} USDC
+      // - **Liquidity (USD)**: ${formatNumber(liquidityUsd)}
+      // - **FDV**: ${formatNumber(fdv)}
+      // - **Market Cap**: ${formatNumber(marketCap)}
 
-//       const message = `
-// - **Name**: ${name}
-// - **Symbol**: ${symbol}
-// - **Price (USD)**: $${priceUsd}
-// - **Price (Native)**: ${priceNative} USDC
-// - **Liquidity (USD)**: ${formatNumber(liquidityUsd)}
-// - **FDV**: ${formatNumber(fdv)}
-// - **Market Cap**: ${formatNumber(marketCap)}
+      // **Volume**:
+      // - **24H**: ${formatNumber(volume24h)}
+      // - **1H**: ${formatNumber(volume1h)}
+      // - **6H**: ${formatNumber(volume6h)}
+      // - **5M**: ${formatNumber(volume5m)}
 
-// **Volume**:
-// - **24H**: ${formatNumber(volume24h)}
-// - **1H**: ${formatNumber(volume1h)}
-// - **6H**: ${formatNumber(volume6h)}
-// - **5M**: ${formatNumber(volume5m)}
+      // **Buys**:
+      // - **24H**: ${buys24h}
+      // - **1H**: ${buys1h}
+      // - **6H**: ${buys6h}
+      // - **5M**: ${buys5m}
 
-// **Buys**:
-// - **24H**: ${buys24h}
-// - **1H**: ${buys1h}
-// - **6H**: ${buys6h}
-// - **5M**: ${buys5m}
+      // **Sells**:
+      // - **24H**: ${sells24h}
+      // - **1H**: ${sells1h}
+      // - **6H**: ${sells6h}
+      // - **5M**: ${sells5m}
 
-// **Sells**:
-// - **24H**: ${sells24h}
-// - **1H**: ${sells1h}
-// - **6H**: ${sells6h}
-// - **5M**: ${sells5m}
+      // **Dextools URL**: [${url}]( ${url})
+      // `;
 
-// **Dextools URL**: [${url}]( ${url})
-// `;
-
-
-
-
-  const message = `
-  <b>name :</b> <code> ${name}</code>
+      const message = `
+  <b>Name :</b> <code> ${name}</code>
   <b>Symbol :</b> <code> ${symbol}</code>
   <b>Price :</b> <code>$ ${priceUsd}</code>
   <b>priceNative :</b> <code>${priceNative} USDC</code>
   <b>Liquidity (USD):</b> <code>${formatNumber(liquidityUsd)}</code>
   <b>FDV:</b> <code>${formatNumber(fdv)}</code>
   <b>Market Cap:</b> <code>${formatNumber(marketCap)}</code>
-  
   
   <b>Volume:</b>
     • 24H: <code>${formatNumber(volume24h)}</code>
@@ -122,34 +117,29 @@ bot.command("coin", async (ctx) => {
     • 6H: <code>${sells6h}</code>
     • 5M: <code>${sells5m}</code>
 
-    <code>Descreener URL - ${url}</code>
+    <code>Dexcreener URL - ${url}</code>
   
   `;
 
       // await ctx.reply(message, { parse_mode: "Markdown" });
       await ctx.reply(message, { parse_mode: "HTML" });
     } else {
-      return ctx.reply(
-        "enter the correct address of the coin"
-      );
+      return ctx.reply("enter the correct address of the coin");
     }
   } catch (error) {
     console.error("Error fetching coin data:", error);
     ctx.reply(
-      "something went wrong while fetching the coin details. please try again later"
+      "Something went wrong while fetching the coin details. Please try again later."
     );
   }
 });
 
-
 bot.on("text", (ctx) => {
   const userMessage = ctx.message.text.toLowerCase();
   if (!userMessage.startsWith("/coin")) {
-    ctx.reply("wrong command - use /coin <TOKENADDRESS> to get coin data");
+    ctx.reply("Wrong command - use /coin <TOKENADDRESS> to get coin details.");
   }
 });
-
-
 
 bot.launch();
 
